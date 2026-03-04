@@ -1,12 +1,31 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    NgIf,
+    AsyncPipe
+  ],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'frontend';
+  private authService = inject(AuthService);
+  user: any = null;
+  currentUser$ = this.authService.currentUser$;
+  ngOnInit() {
+  const token = localStorage.getItem('library_token');
+  if (token) {
+    this.router.navigate(['/dashboard/user']);
+  }
+}
+  logout() {
+    this.authService.logout();
+  }
 }
