@@ -1,25 +1,239 @@
-<nav>
-  <a routerLink="/" routerLinkActive="active">Books</a>
+<!-- NAVBAR -->
+<nav class="navbar">
 
-  <a *ngIf="(currentUser$ | async) as user"
-     routerLink="/my-books"
-     routerLinkActive="active">
-     My Books
+  <!-- LOGO / BRAND -->
+  <a routerLink="/books" class="logo">
+    📚 <span>SmartLibrary</span>
   </a>
 
-  <a *ngIf="user?.role === 'librarian'"
-     routerLink="/librarian"
-     routerLinkActive="active">
-     Librarian
-  </a>
+  <!-- NAV LINKS -->
+  <div class="nav-links">
 
-  <span *ngIf="user">
-    Welcome, {{ user?.fullName }}
-  </span>
+    <!-- BOOKS -->
+    <a
+      routerLink="/books"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{exact:false}"
+    >
+      Books
+    </a>
 
-  <button *ngIf="user" (click)="logout()">Logout</button>
+    <!-- MY BOOKS (ONLY NORMAL USER) -->
+    <a
+      *ngIf="currentUser && !isLibrarian"
+      routerLink="/my-books"
+      routerLinkActive="active"
+    >
+      My Books
+    </a>
 
-  <a *ngIf="!user" routerLink="/login">Login</a>
+    <!-- LIBRARIAN NAVIGATION -->
+    <ng-container *ngIf="isLibrarian">
+
+      <a
+        routerLink="/librarian/dashboard"
+        routerLinkActive="active"
+      >
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/librarian/books"
+        routerLinkActive="active"
+      >
+        Manage Books
+      </a>
+
+      <a
+        routerLink="/librarian/users"
+        routerLinkActive="active"
+      >
+        Users
+      </a>
+
+    </ng-container>
+
+    <!-- USER SECTION -->
+    <div *ngIf="currentUser" class="user-section">
+
+      <span class="user-name">
+        👋 {{ currentUser?.fullName }}
+      </span>
+
+      <button class="logout-btn" (click)="logout()">
+        Logout
+      </button>
+
+    </div>
+
+    <!-- AUTH LINKS -->
+    <div *ngIf="!currentUser" class="auth-links">
+
+      <a routerLink="/login" routerLinkActive="active">
+        Login
+      </a>
+
+      <a
+        routerLink="/register"
+        routerLinkActive="active"
+        class="register-btn"
+      >
+        Register
+      </a>
+
+    </div>
+
+  </div>
+
 </nav>
 
-<router-outlet></router-outlet>
+<!-- PAGE CONTENT -->
+<div class="page-container">
+  <router-outlet></router-outlet>
+</div>
+
+
+<!-- STYLES -->
+<style>
+
+/* ===== NAVBAR ===== */
+
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:0 40px;
+  height:70px;
+
+  background:#1e3a5f;
+  border-bottom:4px solid #c8a75d;
+
+  box-shadow:0 4px 14px rgba(0,0,0,0.08);
+}
+
+/* LOGO */
+
+.logo{
+  font-size:20px;
+  font-weight:700;
+  text-decoration:none;
+  color:white;
+
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.logo span{
+  color:#c8a75d;
+}
+
+/* NAV LINKS */
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+
+.nav-links a{
+  text-decoration:none;
+  font-size:14px;
+  font-weight:500;
+
+  color:#e2e8f0;
+  transition:0.25s;
+}
+
+/* HOVER */
+
+.nav-links a:hover{
+  color:#c8a75d;
+}
+
+/* ACTIVE */
+
+.active{
+  color:#c8a75d;
+  border-bottom:2px solid #c8a75d;
+  padding-bottom:2px;
+}
+
+/* USER SECTION */
+
+.user-section{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-left:12px;
+}
+
+.user-name{
+  font-size:13px;
+  color:#f1f5f9;
+}
+
+/* LOGIN / REGISTER */
+
+.auth-links{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.register-btn{
+  padding:6px 14px;
+  background:#c8a75d;
+  color:#1e293b !important;
+  border-radius:6px;
+  font-weight:600;
+}
+
+.register-btn:hover{
+  background:#b89449;
+}
+
+/* LOGOUT */
+
+.logout-btn{
+  padding:6px 14px;
+  background:#ef4444;
+  color:white;
+  border:none;
+  border-radius:6px;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.logout-btn:hover{
+  background:#dc2626;
+}
+
+/* PAGE CONTAINER */
+
+.page-container{
+  padding:30px;
+  max-width:1200px;
+  margin:auto;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .navbar{
+    padding:0 20px;
+  }
+
+  .nav-links{
+    gap:14px;
+  }
+
+  .user-name{
+    display:none;
+  }
+
+}
+
+</style>

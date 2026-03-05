@@ -16,6 +16,7 @@ export interface Issue {
 export class IssueService {
 
   private api = 'http://localhost:8080/api/issues';
+  borrowBook: any;
 
   constructor(private http: HttpClient) {}
 

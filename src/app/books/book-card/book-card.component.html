@@ -1,1 +1,193 @@
-<p>book-card works!</p>
+<div 
+  class="book-card"
+  [appHighlight]="'lightblue'"
+  [class.no-copies]="book.availableCopies === 0"
+  [routerLink]="['/books', book.id]"
+>
+
+  <!-- TOP SECTION -->
+  <div class="card-top">
+    <div class="title-section">
+      <h3>{{ book.title }}</h3>
+      <span class="category">{{ book.category | titlecase }}</span>
+    </div>
+
+    <div 
+      class="availability-dot"
+      [class.available]="book.availableCopies > 0"
+      [class.unavailable]="book.availableCopies === 0"
+    ></div>
+  </div>
+
+  <!-- AUTHOR -->
+  <p class="author">
+    by {{ book?.author || 'Unknown Author' }}
+  </p>
+
+  <!-- DESCRIPTION -->
+  <p class="description">
+    {{ book.body }}
+  </p>
+
+  <!-- FOOTER -->
+  <div class="book-footer">
+
+    <div 
+      class="availability-text"
+      [class.available]="book.availableCopies > 0"
+      [class.unavailable]="book.availableCopies === 0"
+    >
+      {{ book.availableCopies > 0 
+          ? book.availableCopies + ' copies available' 
+          : 'No copies available' }}
+    </div>
+
+    <button 
+      *ngIf="book.availableCopies > 0" 
+      class="borrow-btn" 
+      (click)="onBorrow(); $event.stopPropagation()"
+    >
+      Borrow
+    </button>
+
+    <span 
+      *ngIf="book.availableCopies === 0" 
+      class="unavailable-label"
+      (click)="$event.stopPropagation()"
+    >
+      Unavailable
+    </span>
+
+  </div>
+</div>
+<style>
+    .book-card {
+  background: white;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+}
+
+.book-card.no-copies {
+  opacity: 0.8;
+}
+
+/* TOP */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title-section h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.category {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* AVAILABILITY DOT */
+.availability-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.availability-dot.available {
+  background: #16a34a;
+  box-shadow: 0 0 8px rgba(22,163,74,0.6);
+}
+
+.availability-dot.unavailable {
+  background: #ef4444;
+}
+
+/* AUTHOR */
+.author {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* DESCRIPTION */
+.description {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* FOOTER */
+.book-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* AVAILABILITY TEXT */
+.availability-text {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.availability-text.available {
+  color: #16a34a;
+}
+
+.availability-text.unavailable {
+  color: #ef4444;
+}
+
+/* BUTTON */
+.borrow-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.borrow-btn:hover {
+  transform: scale(1.05);
+}
+
+/* UNAVAILABLE LABEL */
+.unavailable-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #ef4444;
+  background: #fee2e2;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+</style>

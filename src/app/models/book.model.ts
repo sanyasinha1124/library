@@ -1,6 +1,19 @@
 export interface Book {
-  id: number;
-  title: string;
-  author: string;
-  availableCopies: number;
+  id:               number;
+  userId:           number;
+  title:            string;
+  body:             string;
+  author:           string;
+  isbn:             string;
+  publisher:        string;
+  publishedDate:    string;
+  publishedYear?:   number;
+  category:         string;
+  totalCopies:      number;
+  availableCopies:  number;
+  issuedCopies:     number;
+  position:         string;
+  addedDate:        string;
+  addedBy:          string;
+  coverImage?:      string;
 }

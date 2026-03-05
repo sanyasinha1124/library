@@ -1,0 +1,240 @@
+<div class="admin-users">
+
+  <div class="page-header">
+    <h1>👥 Manage Users</h1>
+    <p>View and control library members</p>
+  </div>
+
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+
+  <p *ngIf="message" class="message"
+     [class.success]="message.includes('✅')"
+     [class.error]="!message.includes('✅')">
+     {{ message }}
+  </p>
+
+  <div class="table-wrapper" *ngIf="!isLoading && users.length > 0">
+
+    <table class="users-table">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Username</th>
+          <th>Role</th>
+          <th>Books</th>
+          <th>Fines</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let user of users; trackBy: trackById">
+
+          <td class="name-cell">
+            <div class="user-avatar">
+              {{ user.fullName?.charAt(0) }}
+            </div>
+
+            <div>
+              <strong>{{ user.fullName }}</strong>
+            </div>
+          </td>
+
+          <td>{{ user.username }}</td>
+
+          <td>
+            <span class="role-badge">
+              {{ user.role }}
+            </span>
+          </td>
+
+          <td>{{ user.currentBooksCount }}</td>
+
+          <td class="fine-cell">
+            ₹ {{ user.totalFines }}
+          </td>
+
+          <td>
+            <span
+              class="status-badge"
+              [class.active]="user.isActive"
+              [class.inactive]="!user.isActive"
+            >
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td>
+
+            <button
+              class="action-btn"
+              [class.deactivate]="user.isActive"
+              [class.activate]="!user.isActive"
+              (click)="toggleActive(user)"
+            >
+              {{ user.isActive ? 'Deactivate' : 'Activate' }}
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <div *ngIf="!isLoading && users.length === 0" class="empty-state">
+    No users found.
+  </div>
+
+</div>
+<style>
+    .admin-users{
+  padding:40px;
+  background:#f4f6fb;
+  min-height:100vh;
+  font-family:Segoe UI, sans-serif;
+}
+
+.page-header{
+  margin-bottom:30px;
+}
+
+.page-header h1{
+  margin:0;
+  font-size:28px;
+  color:#1e293b;
+}
+
+.page-header p{
+  color:#64748b;
+  margin-top:4px;
+}
+
+.message{
+  margin-bottom:15px;
+  font-weight:500;
+}
+
+.message.success{
+  color:#16a34a;
+}
+
+.message.error{
+  color:#dc2626;
+}
+
+.table-wrapper{
+  background:white;
+  border-radius:12px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.05);
+  overflow:hidden;
+}
+
+.users-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.users-table thead{
+  background:#1e293b;
+  color:white;
+}
+
+.users-table th{
+  padding:14px;
+  text-align:left;
+  font-size:14px;
+}
+
+.users-table td{
+  padding:14px;
+  border-bottom:1px solid #f1f5f9;
+  font-size:14px;
+}
+
+.users-table tbody tr:hover{
+  background:#f8fafc;
+}
+
+.name-cell{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user-avatar{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#3b82f6;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.role-badge{
+  background:#e2e8f0;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.status-badge{
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:500;
+}
+
+.status-badge.active{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.status-badge.inactive{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.fine-cell{
+  color:#dc2626;
+  font-weight:500;
+}
+
+.action-btn{
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.action-btn.activate{
+  background:#16a34a;
+  color:white;
+}
+
+.action-btn.deactivate{
+  background:#ef4444;
+  color:white;
+}
+
+.action-btn:hover{
+  opacity:0.85;
+}
+
+.empty-state{
+  text-align:center;
+  margin-top:30px;
+  color:#64748b;
+}
+</style>

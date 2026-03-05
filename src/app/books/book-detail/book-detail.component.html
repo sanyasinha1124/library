@@ -1,0 +1,199 @@
+<style>
+  .book-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  .back-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .book-card {
+    margin-top: 20px;
+    padding: 28px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .book-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .book-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .book-author {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .category-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #eef2ff;
+    color: #4338ca;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .book-meta {
+    text-align: right;
+  }
+
+  .meta-text {
+    font-size: 13px;
+    color: #777;
+  }
+
+  .availability {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .available {
+    color: #16a34a;
+  }
+
+  .unavailable {
+    color: #dc2626;
+  }
+
+  .divider {
+    height: 1px;
+    background: #eee;
+    margin: 20px 0;
+  }
+
+  .description {
+    line-height: 1.7;
+    font-size: 15px;
+    color: #444;
+    margin-bottom: 20px;
+  }
+
+  .extra-info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .borrow-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background-color: #3b82f6;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .borrow-btn:hover {
+    background-color: #2563eb;
+  }
+
+  .success {
+    color: #16a34a;
+    font-weight: 500;
+  }
+
+  .error {
+    color: #dc2626;
+  }
+
+  .login-hint {
+    color: #666;
+    font-size: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .book-header {
+      flex-direction: column;
+    }
+
+    .book-meta {
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="book-detail-container">
+  <a routerLink="/books" class="back-link">← Back to Books</a>
+
+  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <div *ngIf="book" class="book-card">
+
+    <div class="book-header">
+      <div>
+        <h1 class="book-title">{{ book.title }}</h1>
+        <p class="book-author">by {{ book?.author }}</p>
+        <span class="category-badge">
+          {{ book?.category | titlecase }}
+        </span>
+      </div>
+
+      <div class="book-meta">
+        <p class="availability"
+           [ngClass]="{
+             'available': book.availableCopies > 0,
+             'unavailable': book.availableCopies === 0
+           }">
+          {{ book.availableCopies }} / {{ book.totalCopies }} available
+        </p>
+
+        <p class="meta-text">ISBN: {{ book?.isbn }}</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="description">
+      {{ book?.body }}
+    </div>
+
+    <div class="extra-info">
+      <p>Publisher: {{ book?.publisher }}</p>
+      <p>Added: {{ book?.addedDate | date:'mediumDate' }}</p>
+      <p>Shelf: {{ book?.position }}</p>
+    </div>
+
+    <div>
+      <p *ngIf="borrowMessage"
+         [ngClass]="borrowMessage.includes('✅') ? 'success' : 'error'">
+        {{ borrowMessage }}
+      </p>
+
+      <button
+        *ngIf="book.availableCopies > 0 && authService.isLoggedIn()"
+        class="borrow-btn"
+        (click)="borrow()"
+      >
+        Borrow This Book
+      </button>
+
+      <p *ngIf="book.availableCopies === 0" class="error">
+        All copies are currently borrowed.
+      </p>
+
+      <p *ngIf="!authService.isLoggedIn()" class="login-hint">
+        <a routerLink="/login">Login</a> to borrow this book.
+      </p>
+    </div>
+
+  </div>
+</div>

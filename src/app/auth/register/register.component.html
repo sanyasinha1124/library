@@ -1,1 +1,334 @@
-<p>register works!</p>
+<!-- <div class="login-page">
+  <div class="login-box">
+    <h2>📚 Create Account</h2>
+    <p>Join the library today!</p>
+
+    <div *ngIf="errorMessage" class="error-box">
+      {{ errorMessage }}
+    </div>
+
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+      <div class="form-group">
+        <label>Username *</label>
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          required
+          minlength="3"
+          #usernameField="ngModel"
+          placeholder="Choose a username"
+        />
+        <span class="error" *ngIf="usernameField.touched && usernameField.invalid">
+          <span *ngIf="usernameField.errors?.['required']">Username is required</span>
+          <span *ngIf="usernameField.errors?.['minlength']">At least 3 characters</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          name="fullName"
+          [(ngModel)]="fullName"
+          placeholder="Your full name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Email *</label>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+          #emailField="ngModel"
+          placeholder="your@email.com"
+        />
+        <span class="error" *ngIf="emailField.touched && emailField.invalid">
+          <span *ngIf="emailField.errors?.['required']">Email is required</span>
+          <span *ngIf="emailField.errors?.['email']">Please enter a valid email</span>
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Password *</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          #passwordField="ngModel"
+          placeholder="At least 6 characters"
+        />
+        <span class="error" *ngIf="passwordField.touched && passwordField.invalid">
+          <span *ngIf="passwordField.errors?.['required']">Password is required</span>
+          <span *ngIf="passwordField.errors?.['minlength']">At least 6 characters</span>
+        </span>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid || isLoading">
+        {{ isLoading ? 'Creating account...' : 'Register' }}
+      </button>
+    </form>
+
+    <p style="margin-top: 15px;">
+      Already have an account? <a routerLink="/login">Login here</a>
+    </p>
+  </div>
+</div> -->
+<div class="auth-page">
+
+  <div class="auth-box">
+
+    <div class="auth-header">
+      <h2>📚 Create Account</h2>
+      <p>Join the library and start borrowing today</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-box">
+      {{ errorMessage }}
+    </div>
+
+    <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+
+      <!-- USERNAME -->
+      <div class="form-group">
+        <label>Username *</label>
+        <input
+          type="text"
+          name="username"
+          [(ngModel)]="username"
+          required
+          minlength="3"
+          #usernameField="ngModel"
+          placeholder="Choose a username"
+        />
+        <div class="error" *ngIf="usernameField.touched && usernameField.invalid">
+          <span *ngIf="usernameField.errors?.['required']">Username is required</span>
+          <span *ngIf="usernameField.errors?.['minlength']">At least 3 characters</span>
+        </div>
+      </div>
+
+      <!-- FULL NAME -->
+      <div class="form-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          name="fullName"
+          [(ngModel)]="fullName"
+          placeholder="Your full name"
+        />
+      </div>
+
+      <!-- EMAIL -->
+      <div class="form-group">
+        <label>Email *</label>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+          #emailField="ngModel"
+          placeholder="your@email.com"
+        />
+        <div class="error" *ngIf="emailField.touched && emailField.invalid">
+          <span *ngIf="emailField.errors?.['required']">Email is required</span>
+          <span *ngIf="emailField.errors?.['email']">Please enter a valid email</span>
+        </div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="form-group">
+        <label>Password *</label>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          #passwordField="ngModel"
+          placeholder="At least 6 characters"
+        />
+        <div class="error" *ngIf="passwordField.touched && passwordField.invalid">
+          <span *ngIf="passwordField.errors?.['required']">Password is required</span>
+          <span *ngIf="passwordField.errors?.['minlength']">At least 6 characters</span>
+        </div>
+      </div>
+
+      <!-- SUBMIT BUTTON -->
+      <button 
+        type="submit" 
+        [disabled]="registerForm.invalid || isLoading"
+        class="auth-btn"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading" class="btn-loading">
+          <span class="mini-spinner"></span>
+          Creating account...
+        </span>
+      </button>
+
+    </form>
+
+    <div class="switch-text">
+      Already have an account?
+      <a routerLink="/login">Login here</a>
+    </div>
+
+  </div>
+
+</div>
+
+<style>
+    .auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-box {
+  background: white;
+  width: 420px;
+  max-width: 100%;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER */
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.auth-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.form-group input {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* ERROR */
+.error {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.error-box {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+/* BUTTON */
+.auth-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.auth-btn:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* LOADING */
+.btn-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* SWITCH LINK */
+.switch-text {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.switch-text a {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.switch-text a:hover {
+  text-decoration: underline;
+}
+</style>

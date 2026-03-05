@@ -7,203 +7,288 @@ import { LibraryConfigService,LibraryConfig } from '../../core/library-config.se
   standalone: true,
   selector: 'app-my-books',
   imports: [CommonModule],
-  template: `
-  <div class="page">
+template: `
+<div class="page">
 
-    <header class="header">
-      <h1>📚 My Library</h1>
-      <p>Manage your borrowed books and fines</p>
-    </header>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>My Books</h1>
+      <p>Track your borrowed books and manage due dates</p>
+    </div>
 
-    <!-- Fine Summary -->
-    <section class="fine-card" *ngIf="totalFine > 0">
-  <div>
-    <h3>Total Pending Fine</h3>
-    <p class="amount">₹ {{ totalFine }}</p>
+    <div class="summary-card" *ngIf="totalFine > 0">
+      <div class="fine-label">Total Pending Fine</div>
+      <div class="fine-amount">₹ {{ totalFine }}</div>
+    </div>
   </div>
-  <button class="pay-btn">
-    Pay Now
-  </button>
-</section>
 
-    <!-- Borrowed Books -->
-    <section>
-      <h2>Borrowed Books</h2>
+  <!-- LOADING -->
+  <div *ngIf="loading" class="state-card">
+    <div class="spinner"></div>
+    <p>Loading your books...</p>
+  </div>
 
-      <div *ngIf="loading" class="loading">
-        Loading your books...
-      </div>
-      
+  <!-- EMPTY -->
+  <div *ngIf="!loading && issues.length === 0" class="state-card">
+    <h3>No books borrowed yet</h3>
+    <p>Borrow books from the catalog to see them here 📚</p>
+  </div>
 
-      <div *ngIf="!loading && issues.length === 0" class="empty">
-        No books borrowed yet.
-      </div>
+  <!-- BOOK GRID -->
+  <div class="book-grid" *ngIf="!loading && issues.length > 0">
 
-      <div class="book-grid">
-        <div 
-          *ngFor="let issue of issues"
-          class="book-card"
-          [class.overdue]="isOverdue(issue.dueDate)"
-        >
-          <div class="book-info">
-            <h3>{{ issue.book.title }}</h3>
-            <p>Author: {{ issue.book.author }}</p>
-          </div>
+    <div 
+      *ngFor="let issue of issues"
+      class="book-card"
+      [class.overdue]="isOverdue(issue.dueDate)"
+    >
 
-          <div class="meta">
-            <p>
-              Due: 
-              <strong>
-                {{ issue.dueDate | date:'mediumDate' }}
-              </strong>
-            </p>
-
-            <span 
-              class="status"
-              [class.bad]="isOverdue(issue.dueDate)"
-            >
-              {{ isOverdue(issue.dueDate) ? 'Overdue' : 'Active' }}
-            </span>
-          </div>
+      <div class="card-header">
+        <div>
+          <h3>{{ issue.book.title }}</h3>
+          <p class="author">{{ issue.book.author }}</p>
         </div>
+
+        <span 
+          class="status"
+          [class.bad]="isOverdue(issue.dueDate)"
+        >
+          {{ isOverdue(issue.dueDate) ? 'Overdue' : 'Active' }}
+        </span>
       </div>
 
-    </section>
+      <div class="due-info">
+        <span class="label">Due Date</span>
+        <strong>{{ issue.dueDate | date:'mediumDate' }}</strong>
+      </div>
+
+      <div 
+        *ngIf="calculateFine(issue.dueDate) > 0"
+        class="fine-box"
+      >
+        Fine: ₹ {{ calculateFine(issue.dueDate) }}
+      </div>
+
+      <div class="actions">
+        <button class="renew-btn">Renew</button>
+        <button class="return-btn">Return</button>
+      </div>
+
+    </div>
 
   </div>
-  `,
-  styles: [`
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
 
-    .page {
-      padding: 2rem;
-      background: #f4f6f9;
-      min-height: 100vh;
-    }
+</div>
+`,
+styles: [`
 
-    .header {
-      margin-bottom: 2rem;
-    }
+.page {
+  padding: 40px;
+  background: #f1f5f9;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
 
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+/* HEADER */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
 
-    .header p {
-      color: #6b7280;
-      margin-top: 4px;
-    }
+.page-header h1 {
+  font-size: 30px;
+  margin: 0;
+  font-weight: 600;
+}
 
-    h2 {
-      margin-bottom: 1rem;
-    }
+.page-header p {
+  margin-top: 6px;
+  color: #64748b;
+}
 
-    /* Fine Card */
-    .fine-card {
-      background: linear-gradient(135deg, #2563eb, #1e3a8a);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
+/* SUMMARY */
+.summary-card {
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: white;
+  padding: 18px 28px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(239, 68, 68, 0.3);
+}
 
-    .amount {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 5px;
-    }
+.fine-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
 
-    .pay-btn {
-      background: white;
-      color: #1e3a8a;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+.fine-amount {
+  font-size: 24px;
+  font-weight: 700;
+}
 
-    .pay-btn:hover {
-      transform: translateY(-2px);
-    }
+/* GRID */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+}
 
-    /* Books Grid */
-    .book-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
+/* CARD */
+.book-card {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 
-    .book-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      transition: 0.3s;
-      border-left: 6px solid #2563eb;
-    }
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
 
-    .book-card:hover {
-      transform: translateY(-4px);
-    }
+.book-card.overdue {
+  border-left: 6px solid #ef4444;
+}
 
-    .book-card.overdue {
-      border-left: 6px solid #ef4444;
-    }
+/* HEADER */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
 
-    .book-info h3 {
-      margin: 0 0 5px 0;
-    }
+.card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
 
-    .meta {
-      margin-top: 1rem;
-      font-size: 14px;
-      color: #6b7280;
-    }
+.author {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 4px;
+}
 
-    .status {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      background: #dcfce7;
-      color: #166534;
-    }
+/* STATUS */
+.status {
+  font-size: 11px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  background: #dcfce7;
+  color: #166534;
+}
 
-    .status.bad {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.status.bad {
+  background: #fee2e2;
+  color: #991b1b;
+  animation: pulse 1.5s infinite;
+}
 
-    .loading,
-    .empty {
-      padding: 2rem;
-      text-align: center;
-      color: #6b7280;
-    }
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 
-    @media (max-width: 768px) {
-      .page {
-        padding: 1rem;
-      }
+/* DUE INFO */
+.due-info {
+  font-size: 14px;
+}
 
-      .fine-card {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-    }
-  `]
+.label {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* FINE */
+.fine-box {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* ACTIONS */
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.renew-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.renew-btn:hover {
+  background: #1d4ed8;
+}
+
+.return-btn {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.return-btn:hover {
+  background: #e2e8f0;
+}
+
+/* STATES */
+.state-card {
+  background: white;
+  padding: 60px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #2563eb;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+`]
 })
 export class MyBooksComponent implements OnInit {
   config!: LibraryConfig;
@@ -257,6 +342,9 @@ get totalFine(): number {
   return this.issues.reduce((sum, issue) => {
     return sum + this.calculateFine(issue.dueDate);
   }, 0);
+}
+isOverdue(dueDate: string): boolean {
+  return new Date(dueDate) < new Date();
 }
 
 }
