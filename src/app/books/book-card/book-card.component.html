@@ -2,34 +2,33 @@
   class="book-card"
   [appHighlight]="'lightblue'"
   [class.no-copies]="book.availableCopies === 0"
-  [routerLink]="['/books', book.id]"
 >
 
-  <!-- TOP SECTION -->
-  <div class="card-top">
-    <div class="title-section">
-      <h3>{{ book.title }}</h3>
-      <span class="category">{{ book.category | titlecase }}</span>
+  <div class="card-body" [routerLink]="['/books', book.id]">
+
+    <div class="card-top">
+      <div class="title-section">
+        <h3>{{ book.title }}</h3>
+        <span class="category">{{ book.category | titlecase }}</span>
+      </div>
+
+      <div 
+        class="availability-dot"
+        [class.available]="book.availableCopies > 0"
+        [class.unavailable]="book.availableCopies === 0"
+      ></div>
     </div>
 
-    <div 
-      class="availability-dot"
-      [class.available]="book.availableCopies > 0"
-      [class.unavailable]="book.availableCopies === 0"
-    ></div>
+    <p class="author">
+      by {{ book?.addedBy || 'Unknown Author' }}
+    </p>
+
+    <p class="description">
+      {{ book.body }}
+    </p>
+
   </div>
 
-  <!-- AUTHOR -->
-  <p class="author">
-    by {{ book?.author || 'Unknown Author' }}
-  </p>
-
-  <!-- DESCRIPTION -->
-  <p class="description">
-    {{ book.body }}
-  </p>
-
-  <!-- FOOTER -->
   <div class="book-footer">
 
     <div 
@@ -42,23 +41,16 @@
           : 'No copies available' }}
     </div>
 
-    <button 
-      *ngIf="book.availableCopies > 0" 
-      class="borrow-btn" 
-      (click)="onBorrow(); $event.stopPropagation()"
+    <!-- <button
+      *ngIf="book.availableCopies > 0"
+      class="borrow-btn"
+      (click)="onBorrow()"
     >
       Borrow
-    </button>
-
-    <span 
-      *ngIf="book.availableCopies === 0" 
-      class="unavailable-label"
-      (click)="$event.stopPropagation()"
-    >
-      Unavailable
-    </span>
+    </button> -->
 
   </div>
+
 </div>
 <style>
     .book-card {

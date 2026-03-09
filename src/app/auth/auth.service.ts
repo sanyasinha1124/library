@@ -150,7 +150,9 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
-
+  getCurrentUser(): User | null {
+  return this.currentUser$.getValue();
+}
   isLibrarian(): boolean {
     const user = this.currentUser$.getValue();
     return user?.role === 'librarian';

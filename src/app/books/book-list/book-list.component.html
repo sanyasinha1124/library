@@ -1,46 +1,10 @@
-<!-- <div class="container">
-  <h1> Books Available</h1>
-
-  <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <input
-      #searchInput
-      type="text"
-      placeholder="Search books by title, author..."
-      style="flex: 1;"
-    />
-    <select [(ngModel)]="selectedCategory" (change)="filterByCategory()" style="width: 200px;">
-      <option value="">All Categories</option>
-      <option *ngFor="let cat of categories; trackBy: trackByCat" [value]="cat">{{ cat }}</option>
-    </select>
-  </div>
-
-  <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner>
-
-  <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
-  <p *ngIf="!isLoading && books.length === 0">No books found.</p>
-
-  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
-    <app-book-card
-      *ngFor="let book of books; trackBy: trackByBookId"
-      [book]="book"
-      (borrowClicked)="onBorrowClicked($event)"
-    ></app-book-card>
-  </div>
-
-  <app-confirm-dialog
-    [visible]="showConfirm"
-    [message]="'Borrow this book? It will be due in 14 days.'"
-    (confirmed)="confirmBorrow()"
-    (cancelled)="cancelBorrow()"
-  ></app-confirm-dialog>
-</div> -->
 <div class="catalog-container">
 
   <!-- HEADER -->
   <div class="catalog-header">
     <div>
-      <h1>Books Available</h1>
-      <p>Discover and borrow your next read</p>
+      <h1>📚 Library Catalog</h1>
+      <p>Browse, explore and borrow books from the collection</p>
     </div>
   </div>
 
@@ -51,7 +15,7 @@
       <input
         #searchInput
         type="text"
-        placeholder="Search by title or author..."
+        placeholder="🔎 Search books by title or author..."
       />
     </div>
 
@@ -61,12 +25,14 @@
         (change)="filterByCategory()"
       >
         <option value="">All Categories</option>
-        <option 
-          *ngFor="let cat of categories; trackBy: trackByCat" 
+
+        <option
+          *ngFor="let cat of categories; trackBy: trackByCat"
           [value]="cat"
         >
           {{ cat }}
         </option>
+
       </select>
     </div>
 
@@ -83,89 +49,122 @@
   <!-- EMPTY -->
   <div *ngIf="!isLoading && books.length === 0" class="empty-state">
     <h3>No books found</h3>
-    <p>Try adjusting your search or category filter.</p>
+    <p>Try changing the search or category filter.</p>
   </div>
 
   <!-- BOOK GRID -->
   <div class="books-grid">
-    <app-book-card
+
+    <!-- <app-book-card
       *ngFor="let book of books; trackBy: trackByBookId"
       [book]="book"
       (borrowClicked)="onBorrowClicked($event)"
-    ></app-book-card>
+    ></app-book-card> -->
+    <app-book-card
+  *ngFor="let book of books"
+  [book]="book"
+  (borrowClicked)="onBorrowClicked($event)">
+</app-book-card>
   </div>
 
   <!-- CONFIRM DIALOG -->
   <app-confirm-dialog
-    [visible]="showConfirm"
-    [message]="'Borrow this book? It will be due in 14 days.'"
-    (confirmed)="confirmBorrow()"
-    (cancelled)="cancelBorrow()"
-  ></app-confirm-dialog>
+  *ngIf="showConfirm"
+  message="Are you sure you want to borrow this book?"
+  (confirm)="confirmBorrow()"
+  (cancel)="cancelBorrow()">
+</app-confirm-dialog>
 
 </div>
 
 <style>
-    .catalog-container {
+.catalog-container {
   padding: 40px;
-  background: #f1f5f9;
+  background: #f8fafc;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
 }
 
 /* HEADER */
+
 .catalog-header {
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .catalog-header h1 {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 34px;
+  font-weight: 700;
   margin: 0;
+  color: #1e3a8a;
 }
 
 .catalog-header p {
-  color: #64748b;
   margin-top: 6px;
+  color: #64748b;
+  font-size: 14px;
 }
 
 /* FILTER BAR */
+
 .filter-bar {
   display: flex;
   gap: 20px;
   margin-bottom: 30px;
   flex-wrap: wrap;
+  align-items: center;
+
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
 }
+
+/* SEARCH */
 
 .search-box {
   flex: 1;
 }
 
 .search-box input {
+
   width: 100%;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 12px 16px;
+
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
+
   font-size: 14px;
-  transition: 0.2s ease;
+  background: #f8fafc;
+
+  transition: all 0.2s ease;
 }
 
 .search-box input:focus {
+
   outline: none;
   border-color: #2563eb;
+
+  background: white;
+
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-/* CATEGORY SELECT */
+/* CATEGORY */
+
 .category-box select {
+
   width: 220px;
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 12px 14px;
+
+  border-radius: 10px;
   border: 1px solid #e2e8f0;
+
   font-size: 14px;
+
   background: white;
+
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .category-box select:focus {
@@ -174,44 +173,67 @@
 }
 
 /* ERROR */
+
 .error-box {
+
   background: #fee2e2;
-  color: #991b1b;
-  padding: 12px 16px;
-  border-radius: 12px;
+  color: #b91c1c;
+
+  padding: 14px 16px;
+
+  border-radius: 10px;
   margin-bottom: 20px;
+
   font-weight: 500;
 }
 
 /* EMPTY STATE */
+
 .empty-state {
+
   background: white;
-  padding: 50px;
+
+  padding: 60px;
   text-align: center;
-  border-radius: 16px;
+
+  border-radius: 14px;
+
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-/* GRID */
+.empty-state h3 {
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+/* BOOK GRID */
+
 .books-grid {
+
   display: grid;
+
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  margin-top: 20px;
+
+  gap: 26px;
+  margin-top: 10px;
 }
 
 /* RESPONSIVE */
+
 @media (max-width: 768px) {
+
   .catalog-container {
     padding: 20px;
   }
 
   .filter-bar {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .category-box select {
     width: 100%;
   }
+
 }
 </style>

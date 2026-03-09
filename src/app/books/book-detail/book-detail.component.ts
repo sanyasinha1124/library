@@ -4,7 +4,7 @@ import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { BookService } from '../book.service';
-import { IssueService } from '../my-books/issue.service';
+import { IssueService } from '../../my-books/issue.service';
 import { Book } from '../../models/book.model';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner.component';
 import { AuthService } from '../../auth/auth.service';
@@ -53,21 +53,24 @@ export class BookDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  borrow(): void {
-    if (!this.book) return;
-    this.issueService.borrowBook(this.book.id).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: () => {
-        this.borrowMessage = '✅ Borrowed successfully! Check My Books.';
-        if (this.book) this.book.availableCopies--;
-      },
-      error: (err: { error: { error: any; }; }) => {
-        this.borrowMessage = '❌ ' + (err.error?.error || 'Could not borrow.');
-      }
-    });
-  }
+ borrowBook() {
 
+  if (!this.book) return;
+
+  this.issueService.borrowBook(this.book.id).subscribe({
+
+    next: () => {
+      alert("Book borrowed successfully!");
+    },
+
+    error: (err) => {
+      console.error("Borrow error:", err);
+      alert(err.error?.error || "Borrow failed");
+    }
+
+  });
+
+}
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

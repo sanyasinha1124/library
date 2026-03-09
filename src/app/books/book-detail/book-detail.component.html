@@ -179,12 +179,12 @@
       </p>
 
       <button
-        *ngIf="book.availableCopies > 0 && authService.isLoggedIn()"
-        class="borrow-btn"
-        (click)="borrow()"
-      >
-        Borrow This Book
-      </button>
+  *ngIf="book.availableCopies > 0"
+  class="borrow-btn"
+  (click)="borrowBook()"
+>
+  Borrow Book
+</button>
 
       <p *ngIf="book.availableCopies === 0" class="error">
         All copies are currently borrowed.

@@ -8,13 +8,28 @@ export class FineService {
 
   constructor(private http: HttpClient) {}
 
-  getMyFines(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/user/${userId}`);
-  }
+getMyFines(userId: number) {
 
-  payFine(issueId: number): Observable<{ message: string; amountPaid: number }> {
-    return this.http.post<{ message: string; amountPaid: number }>(
-      `${this.apiUrl}/${issueId}/pay`, {}
-    );
-  }
+  return this.http.get<any>(
+    `http://localhost:3001/api/fines/user/${userId}`
+  );
+
+}
+
+payFine(issueId: number) {
+
+  return this.http.post(
+    `http://localhost:3001/api/fines/${issueId}/pay`,
+    {}
+  );
+
+}
+
+calculateFine(issueId: number) {
+
+  return this.http.get(
+    `http://localhost:3001/api/fines/calculate/${issueId}`
+  );
+
+}
 }

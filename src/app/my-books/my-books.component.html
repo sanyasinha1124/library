@@ -24,14 +24,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let issue of issues; trackBy: trackByIssueId"
-            [ngClass]="{
-              'row-overdue': issue.status === 'overdue',
-              'row-returned': issue.status === 'returned'
-            }"
-            style="border-bottom: 1px solid #eee;"
-          >
+         <div *ngFor="let issue of issues">
+  <h3>Book ID: {{ issue.bookId }}</h3>
+  <p>Issued: {{ issue.issueDate | date }}</p>
+  <p>Due: {{ issue.dueDate | date }}</p>
+</div>
             <td style="padding: 10px;">
               <strong>{{ issue.book?.title || 'Book #' + issue.bookId }}</strong><br>
               <small style="color: #777;">{{ issue.book?.author }}</small>

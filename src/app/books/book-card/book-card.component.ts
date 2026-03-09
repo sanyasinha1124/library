@@ -127,6 +127,7 @@
 //   }
 
 // }
+
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Book } from '../../models/book.model';
@@ -142,10 +143,16 @@ import { RouterLink } from '@angular/router';
   templateUrl: './book-card.component.html'
 })
 export class BookCardComponent {
+
   @Input() book!: Book;
+
   @Output() borrowClicked = new EventEmitter<Book>();
 
   onBorrow() {
-    this.borrowClicked.emit(this.book);
+    if (this.book.availableCopies > 0) {
+      this.borrowClicked.emit(this.book);
+    }
+    console.log("this borrow clicked");
   }
+
 }

@@ -9,23 +9,36 @@ export class IssueService {
 
   constructor(private http: HttpClient) {}
 
-  getMyIssues(): Observable<Issue[]> {
-    return this.http.get<Issue[]>(this.apiUrl);
-  }
+  // getMyIssues(): Observable<Issue[]> {
+  //   return this.http.get<Issue[]>(this.apiUrl);
+  // }
 
-  borrowBook(bookId: number): Observable<{ message: string; issue: Issue }> {
-    return this.http.post<{ message: string; issue: Issue }>(this.apiUrl, { bookId });
-  }
+borrowBook(bookId: number) {
+  return this.http.post(
+    'http://localhost:3001/api/issues',
+    { bookId: bookId }
+  );
+}
+ renewIssue(issueId: number) {
 
-  returnBook(issueId: number): Observable<{ message: string; issue: Issue; fine: number }> {
-    return this.http.put<{ message: string; issue: Issue; fine: number }>(
-      `${this.apiUrl}/${issueId}/return`, {}
-    );
-  }
+  return this.http.post(
+    `http://localhost:3001/api/issues/${issueId}/renew`,
+    {}
+  );
 
-  renewBook(issueId: number): Observable<{ message: string; issue: Issue }> {
-    return this.http.put<{ message: string; issue: Issue }>(
-      `${this.apiUrl}/${issueId}/renew`, {}
-    );
-  }
+}
+
+returnIssue(issueId: number) {
+
+  return this.http.post(
+    `http://localhost:3001/api/issues/${issueId}/return`,
+    {}
+  );
+
+}
+ getMyIssues(userId: number) {
+  return this.http.get<any[]>(
+    `http://localhost:3001/api/issues/user/${userId}`
+  );
+}
 }
