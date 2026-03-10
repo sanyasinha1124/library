@@ -98,67 +98,118 @@
 
 /* ===== NAVBAR ===== */
 
-.navbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  padding:0 40px;
-  height:70px;
-
-  background:#1e3a5f;
-  border-bottom:4px solid #c8a75d;
-
-  box-shadow:0 4px 14px rgba(0,0,0,0.08);
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  height: 72px; /* Slightly taller for more "breathability" */
+  background: #1e3a5f;
+  border-bottom: 4px solid #c8a75d;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
 }
 
 /* LOGO */
 
-.logo{
-  font-size:20px;
-  font-weight:700;
-  text-decoration:none;
-  color:white;
-
-  display:flex;
-  align-items:center;
-  gap:6px;
+.logo {
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.5px;
 }
-
-.logo span{
-  color:#c8a75d;
+.logo span {
+  color: #c8a75d;
+  font-weight: 400; /* Contrast weight for a modern look */
 }
 
 /* NAV LINKS */
-
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:22px;
+.nav-links {
+  display: flex;
+  align-items: center;
+   font-family: 'Montserrat', sans-serif; 
+  gap: 28px; /* Increased gap for a cleaner look */
 }
 
-.nav-links a{
-  text-decoration:none;
-  font-size:14px;
-  font-weight:500;
-
-  color:#e2e8f0;
-  transition:0.25s;
+.nav-links a {
+  text-decoration: none;
+  font-size: 13px; /* Slightly smaller for a "pro" app feel */
+  font-weight: 600;
+  color: #94a3b8; /* Muted slate color for inactive links */
+  transition: all 0.2s ease;
+  text-transform: uppercase; /* Professional UI often uses uppercase for nav */
+  letter-spacing: 0.05em;
 }
 
-/* HOVER */
-
-.nav-links a:hover{
-  color:#c8a75d;
+/* HOVER & ACTIVE */
+.nav-links a:hover {
+  color: #ffffff;
 }
 
-/* ACTIVE */
-
-.active{
-  color:#c8a75d;
-  border-bottom:2px solid #c8a75d;
-  padding-bottom:2px;
+.active {
+  color: #c8a75d !important;
+  position: relative;
 }
+
+/* Active Indicator Line */
+.active::after {
+  content: '';
+  position: absolute;
+  bottom: -24px; /* Aligns with the bottom of the 72px navbar */
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #c8a75d;
+}
+
+/* USER SECTION */
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(255,255,255,0.1); /* Divider for organization */
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #f1f5f9;
+}
+
+/* AUTH & BUTTONS */
+.register-btn {
+  padding: 8px 18px !important;
+  background: #c8a75d;
+  color: #1e293b !important;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: #fca5a5; /* Softer red for professional look */
+  border: 1px solid #7f1d1d;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+
 
 /* USER SECTION */
 
@@ -172,6 +223,7 @@
 .user-name{
   font-size:13px;
   color:#f1f5f9;
+   font-family: 'Montserrat', sans-serif; 
 }
 
 /* LOGIN / REGISTER */
@@ -180,6 +232,7 @@
   display:flex;
   align-items:center;
   gap:12px;
+ 
 }
 
 .register-btn{

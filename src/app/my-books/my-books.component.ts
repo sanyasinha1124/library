@@ -80,10 +80,32 @@ template: `
 
         </div>
 
-        <div class="actions">
-          <button class="renew-btn">Renew</button>
-          <button class="return-btn">Return</button>
-        </div>
+       <div class="actions">
+  <div *ngIf="getSpecificFine(issue.id) as fine; else actionButtons">
+    <button class="pay-btn" (click)="payFine(issue.id)" style="background: #16a34a; color: white; width: 100%; border-radius: 8px; padding: 10px; border: none; cursor: pointer;">
+      💳 Pay Fine (₹{{ fine.fine }})
+    </button>
+  </div>
+
+  <ng-template #actionButtons>
+    <div style="display: flex; gap: 10px; width: 100%;">
+      <button 
+        class="renew-btn" 
+        [disabled]="isOverdue(issue.dueDate)" 
+        (click)="renewBook(issue.id)">
+        Renew
+      </button>
+      
+      <button 
+        class="return-btn" 
+        (click)="returnBook(issue.id)">
+        Return
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+        
 
       </div>
 
@@ -465,6 +487,15 @@ returnBook(issueId: number) {
 
   });
 
+}
+// Helper to find if a specific book has a fine record from the backend
+getSpecificFine(issueId: number) {
+  // We look into the 'fines' array which was populated in ngOnInit
+  // Note: Your backend returns 'issuesWithFines' inside the response object
+  if (this.fines && Array.isArray(this.fines)) {
+    return this.fines.find((f: any) => f.issueId === issueId);
+  }
+  return null;
 }
 payFine(issueId: number) {
 
