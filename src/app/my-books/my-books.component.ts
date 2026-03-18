@@ -459,74 +459,53 @@ ngOnInit(): void {
 }
 
 returnBook(issueId: number) {
-
   this.issueService.returnIssue(issueId).subscribe({
-
     next: () => {
-
       alert("✅ Book returned successfully");
-
       this.reloadIssues();
-
       const user = this.authService.getCurrentUser();
-
       if (user) {
         this.fineService.getMyFines(user.id).subscribe({
           next: (data) => {
-            this.fines = data.issuesWithFines;
+            this.fines = data; // ✅ was: data.issuesWithFines
           }
         });
       }
-
     },
-
     error: (err) => {
       console.error(err);
       alert("❌ Error returning book");
     }
-
   });
-
 }
-// Helper to find if a specific book has a fine record from the backend
+
 getSpecificFine(issueId: number) {
-  // We look into the 'fines' array which was populated in ngOnInit
-  // Note: Your backend returns 'issuesWithFines' inside the response object
-  if (this.fines && Array.isArray(this.fines)) {
-    return this.fines.find((f: any) => f.issueId === issueId);
-  }
-  return null;
+  if (!this.fines || !Array.isArray(this.fines)) return null;
+  if (this.fines.length > 0) console.log('Fine object shape:', this.fines[0]); // check the key
+  return this.fines.find((f: any) => f.issueId === issueId) ?? null;
 }
+
 payFine(issueId: number) {
-
   this.fineService.payFine(issueId).subscribe({
-
     next: (res: any) => {
-
       alert(`✅ Fine paid: ₹${res.amountPaid}`);
-
       const user = this.authService.getCurrentUser();
-
       if (user) {
         this.fineService.getMyFines(user.id).subscribe({
           next: (data) => {
-            this.fines = data.issuesWithFines;
+            this.fines = data; // ✅ was: data.issuesWithFines
           }
         });
       }
-
     },
-
     error: (err) => {
       console.error(err);
       alert("❌ Payment failed");
     }
-
   });
-
 }
 
-  reloadIssues() {
+reloadIssues() {
 
   const user = this.authService.getCurrentUser();
 

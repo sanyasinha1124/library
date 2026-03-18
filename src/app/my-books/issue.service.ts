@@ -9,9 +9,6 @@ export class IssueService {
 
   constructor(private http: HttpClient) {}
 
-  // getMyIssues(): Observable<Issue[]> {
-  //   return this.http.get<Issue[]>(this.apiUrl);
-  // }
 
 borrowBook(bookId: number) {
   return this.http.post(
@@ -21,20 +18,17 @@ borrowBook(bookId: number) {
 }
  renewIssue(issueId: number) {
 
-  return this.http.post(
+  return this.http.put(
     `http://localhost:3001/api/issues/${issueId}/renew`,
     {}
   );
 
 }
 
-returnIssue(issueId: number) {
 
-  return this.http.post(
-    `http://localhost:3001/api/issues/${issueId}/return`,
-    {}
-  );
 
+returnIssue(id: number) {
+  return this.http.put(`http://localhost:3001/api/issues/${id}/return`, {});
 }
  getMyIssues(userId: number) {
   return this.http.get<any[]>(
